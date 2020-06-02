@@ -1,13 +1,104 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.center {
+  text-align: center;
+}
+
+.card-task {
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+
+.card-task .Polaris-Card {
+  width: 220px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-task .Polaris-Card .Polaris-Card__Header {
+  padding-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.card-task .Polaris-Card .Polaris-Card__Header .Polaris-Icon {
+  height: auto;
+}
+
+.card-task .Polaris-Card .Polaris-Card__Header svg {
+  width: 70%;
+}
+
+.card-task .Polaris-Card__Section {
+  font-size: 12px;
+}
+
+.card-task .Polaris-Card__Section .close {
+  visibility: hidden;
+  width: 1rem;
+  display: flex;
+}
+
+.card-task .Polaris-Card__Section .close .Polaris-Icon {
+  height: 1rem;
+}
+
+.card-task :not(.no-hover)>.Polaris-Card__Section {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.card-task :not(.no-hover)>.Polaris-Card__Section:hover {
+  background-image: linear-gradient(rgba(223,227,232,.3),rgba(223,227,232,.3));
+}
+
+.card-task :not(.no-hover)>.Polaris-Card__Section:active {
+  background-image: linear-gradient(rgba(179,188,245,.1),rgba(179,188,245,.1));
+}
+
+.card-task :not(.no-hover)>.Polaris-Card__Section:hover .close {
+  visibility: visible;
+}
+
+.mr-2 {
+  margin-right: 1rem;
+}
+
+.mr-1 {
+  margin-right: 0.5rem;
+}
+
+.mw-100 {
+  min-width: 100%;
+}
+
+.mh-100 {
+  min-height: 100%;
+}
+
+.d-none {
+  display: none;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
 }
