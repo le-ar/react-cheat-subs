@@ -69,8 +69,6 @@ export default class TaskCard extends Component<TaskCardProps> {
             result += task.id + '-';
         }
 
-        console.log(result);
-
         return result;
     }
 
@@ -107,8 +105,8 @@ export default class TaskCard extends Component<TaskCardProps> {
             }
 
             return (
-                <Card.Section>
-                    <Flipped key={task.id} flipId={task.id}>
+                <Card.Section key={task.id}>
+                    <Flipped flipId={task.id}>
                         <div className="d-flex">
                             <div className="d-flex mr-2">
                                 <Icon source={icon} />
