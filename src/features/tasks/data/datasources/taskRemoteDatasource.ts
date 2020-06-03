@@ -3,11 +3,13 @@ import { sleep } from "../../../../core/utils";
 import Task from "../entities/task";
 import Prices from "../entities/peices";
 import AddTask from "../entities/addTask";
+import MyTask from "../entities/myTask";
 
-export interface TaskRemoteDatasource {
+export default interface TaskRemoteDatasource {
     getLikesTask(): Promise<Failure | Task[]>;
     addTask(task: AddTask): Promise<Failure | null>;
     getPrices(): Promise<Failure | Prices>;
+    getMyTasks(): Promise<Failure | MyTask[]>;
 }
 
 export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
@@ -66,5 +68,63 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
 
         // return new Failure();
         return null;
+    }
+
+    async getMyTasks(): Promise<Failure | MyTask[]> {
+        // return new Failure();
+        return [
+            new MyTask({
+                id: 0,
+                resourceType: 'photo',
+                price: 100,
+                url: 'https://google.com',
+                userId: 0,
+                userName: 'Фамилия Имя',
+                userUrl: 'https://google.com',
+                done: 4,
+                orderCount: 10,
+                name: 'photo12312938',
+                taskType: 'like',
+            }),
+            new MyTask({
+                id: 2,
+                resourceType: 'note',
+                price: 100,
+                url: 'https://google.com',
+                userId: 0,
+                userName: 'Фамилия Имя',
+                userUrl: 'https://google.com',
+                done: 4,
+                orderCount: 10,
+                name: 'wall12312938',
+                taskType: 'like',
+            }),
+            new MyTask({
+                id: 3,
+                resourceType: 'group',
+                price: 100,
+                url: 'https://google.com',
+                userId: 0,
+                userName: 'Фамилия Имя',
+                userUrl: 'https://google.com',
+                done: 4,
+                orderCount: 10,
+                name: 'group12312938',
+                taskType: 'subscribeGroup',
+            }),
+            new MyTask({
+                id: 4,
+                resourceType: 'user',
+                price: 100,
+                url: 'https://google.com',
+                userId: 0,
+                userName: 'Фамилия Имя',
+                userUrl: 'https://google.com',
+                done: 4,
+                orderCount: 10,
+                name: 'id12312938',
+                taskType: 'subscribeUser',
+            }),
+        ];
     }
 }

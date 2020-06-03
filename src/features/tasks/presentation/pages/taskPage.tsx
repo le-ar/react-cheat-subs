@@ -11,6 +11,8 @@ import AddTaskStore from "../store/addTaskStore";
 import AddTask from "../widgets/addTask";
 import DonateStore from "../../../donate/presentation/stores/donateStore";
 import DonateWidget from "../../../donate/presentation/widgets/donateWidget";
+import MyTasksStore from "../store/myTasksStore";
+import MyTasks from "../widgets/myTasks";
 
 interface TaskPageProps {
     authStore?: AuthStore;
@@ -20,9 +22,10 @@ interface TaskPageProps {
 @observer
 export default class TaskPage extends Component<TaskPageProps> {
     private interval: NodeJS.Timeout | null = null;
-    @observable private taskStore: TaskStore | undefined = undefined;
-    @observable private addTaskStore: AddTaskStore | undefined = undefined;
-    @observable private donateStore: DonateStore | undefined = undefined;
+    @observable private taskStore?: TaskStore;
+    @observable private addTaskStore?: AddTaskStore;
+    @observable private donateStore?: DonateStore;
+    @observable private myTasksStore?: MyTasksStore;
 
     componentWillUnmount() {
         if (this.interval !== null) {
@@ -38,6 +41,7 @@ export default class TaskPage extends Component<TaskPageProps> {
         let taskClass = (await import('../store/taskStore')).default;
         let donateClass = (await import('../../../donate/presentation/stores/donateStore')).default;
         let addTaskClass = (await import('../store/addTaskStore')).default;
+        let myTasksClass = (await import('../store/myTasksStore')).default;
 
         let taskRemoteDatasource = new (await import('../../data/datasources/taskRemoteDatasource')).TaskRemoteDatasourceImpl();
         let donateRemoteDatasource = new (await import('../../../donate/data/datasources/donateRemoteDatasource')).DonateRemoteDatasourceImpl();
@@ -51,6 +55,9 @@ export default class TaskPage extends Component<TaskPageProps> {
         });
         this.donateStore = new donateClass({
             donateRemoteDatasource
+        });
+        this.myTasksStore = new myTasksClass({
+            taskRemoteDatasource
         });
 
         this.taskStore.refreshTasksLikes();
@@ -67,7 +74,10 @@ export default class TaskPage extends Component<TaskPageProps> {
     }
 
     render() {
-        if (typeof this.taskStore === 'undefined' || typeof this.addTaskStore === 'undefined' || typeof this.donateStore === 'undefined') {
+        if (typeof this.taskStore === 'undefined' ||
+            typeof this.addTaskStore === 'undefined' ||
+            typeof this.donateStore === 'undefined' ||
+            typeof this.myTasksStore === 'undefined') {
             return <Loading />;
         }
 
@@ -85,9 +95,10 @@ export default class TaskPage extends Component<TaskPageProps> {
 
         return (
             <div>
-                <Provider donateStore={this.donateStore}>
+                <Provider donateStore={this.donateStore} myTasksStore={this.myTasksStore}>
                     <div>
                         <UserWidget />
+                        <MyTasks />
                     </div>
                     <div className="mb-1">
                         <Button plain onClick={() => {

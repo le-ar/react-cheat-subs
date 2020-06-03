@@ -1,5 +1,5 @@
 import { observable, action, computed } from "mobx";
-import { TaskRemoteDatasource } from "../../data/datasources/taskRemoteDatasource";
+import TaskRemoteDatasource from "../../data/datasources/taskRemoteDatasource";
 import Prices from "../../data/entities/peices";
 import AddTask, { TaskType } from "../../data/entities/addTask";
 import { Failure } from "../../../../core/failures";

@@ -1,4 +1,4 @@
-import { TaskRemoteDatasource } from "../../data/datasources/taskRemoteDatasource";
+import TaskRemoteDatasource from "../../data/datasources/taskRemoteDatasource";
 import { observable, action } from "mobx";
 import Task from "../../data/entities/task";
 import { Failure, FailureTasksCompleted } from "../../../../core/failures";
