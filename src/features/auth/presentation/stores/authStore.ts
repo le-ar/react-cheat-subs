@@ -10,6 +10,16 @@ export class AuthStore {
         authRemoteDatasource: AuthRemoteDatasource;
     }) {
         this.authRemoteDatasource = props.authRemoteDatasource;
+
+        
+    }
+
+    updating() {
+        setInterval(() => {
+            if (this.myAccount !== null) {
+                this.updateMyAccount();
+            }
+        }, 5000);
     }
 
     @observable isMyAccountLoading: boolean = false;

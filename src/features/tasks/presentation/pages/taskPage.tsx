@@ -9,6 +9,8 @@ import TaskCard from "../widgets/taskCard";
 import UserWidget from "../../../user/presentation/widgets/userWidget";
 import AddTaskStore from "../store/addTaskStore";
 import AddTask from "../widgets/addTask";
+import DonateStore from "../../../donate/presentation/stores/donateStore";
+import DonateWidget from "../../../donate/presentation/widgets/donateWidget";
 
 interface TaskPageProps {
     authStore?: AuthStore;
@@ -20,6 +22,7 @@ export default class TaskPage extends Component<TaskPageProps> {
     private interval: NodeJS.Timeout | null = null;
     @observable private taskStore: TaskStore | undefined = undefined;
     @observable private addTaskStore: AddTaskStore | undefined = undefined;
+    @observable private donateStore: DonateStore | undefined = undefined;
 
     componentWillUnmount() {
         if (this.interval !== null) {
@@ -33,8 +36,11 @@ export default class TaskPage extends Component<TaskPageProps> {
 
     async mounted() {
         let taskClass = (await import('../store/taskStore')).default;
+        let donateClass = (await import('../../../donate/presentation/stores/donateStore')).default;
         let addTaskClass = (await import('../store/addTaskStore')).default;
+
         let taskRemoteDatasource = new (await import('../../data/datasources/taskRemoteDatasource')).TaskRemoteDatasourceImpl();
+        let donateRemoteDatasource = new (await import('../../../donate/data/datasources/donateRemoteDatasource')).DonateRemoteDatasourceImpl();
 
         this.addTaskStore = new addTaskClass({
             taskRemoteDatasource,
@@ -43,6 +49,10 @@ export default class TaskPage extends Component<TaskPageProps> {
         this.taskStore = new taskClass({
             taskRemoteDatasource,
         });
+        this.donateStore = new donateClass({
+            donateRemoteDatasource
+        });
+
         this.taskStore.refreshTasksLikes();
 
         this.interval = setInterval(() => {
@@ -57,7 +67,7 @@ export default class TaskPage extends Component<TaskPageProps> {
     }
 
     render() {
-        if (typeof this.taskStore === 'undefined' || typeof this.addTaskStore === 'undefined') {
+        if (typeof this.taskStore === 'undefined' || typeof this.addTaskStore === 'undefined' || typeof this.donateStore === 'undefined') {
             return <Loading />;
         }
 
@@ -75,19 +85,22 @@ export default class TaskPage extends Component<TaskPageProps> {
 
         return (
             <div>
-                <div>
-                    <UserWidget />
-                </div>
-                <div className="mb-1">
-                    <Button plain onClick={() => {
-                        this.addTaskStore!.setIsModalOpen(true);
-                    }}>
-                        Добавить задание
-                    </Button>
-                    <Provider addTaskStore={this.addTaskStore}>
-                        <AddTask />
-                    </Provider>
-                </div>
+                <Provider donateStore={this.donateStore}>
+                    <div>
+                        <UserWidget />
+                    </div>
+                    <div className="mb-1">
+                        <Button plain onClick={() => {
+                            this.addTaskStore!.setIsModalOpen(true);
+                        }}>
+                            Добавить задание
+                        </Button>
+                        <Provider addTaskStore={this.addTaskStore}>
+                            <AddTask />
+                        </Provider>
+                    </div>
+                    <DonateWidget />
+                </Provider>
                 <div className="d-flex flex-wrap tasks">
                     <TaskCard
                         title="Лайки"

@@ -3,12 +3,14 @@ import { inject, observer } from "mobx-react";
 import { AuthStore } from "../../../auth/presentation/stores/authStore";
 import { Avatar, Button, Loading } from "@shopify/polaris";
 import { CirclePlusMinor } from '@shopify/polaris-icons';
+import DonateStore from "../../../donate/presentation/stores/donateStore";
 
 interface UserWidgetProps {
     authStore?: AuthStore;
+    donateStore?: DonateStore;
 }
 
-@inject('authStore')
+@inject('authStore', 'donateStore')
 @observer
 export default class UserWidget extends Component<UserWidgetProps> {
     render() {
@@ -40,7 +42,7 @@ export default class UserWidget extends Component<UserWidgetProps> {
                         <div>{this.props.authStore.myAccount.name}</div>
                         <div className="d-flex fs-12">
                             <span className="mr-1">Поинтов: {this.props.authStore.myAccount.point}</span>
-                            <Button plain icon={CirclePlusMinor} textAlign="left" />
+                            <Button plain icon={CirclePlusMinor} textAlign="left" onClick={() => { this.props.donateStore?.setModalOpen(true)}} />
                         </div>
                     </div>
                 </div>

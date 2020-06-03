@@ -5,13 +5,15 @@ import AddTaskStore from "../store/addTaskStore";
 import { inject, observer } from "mobx-react";
 import { AuthStore } from "../../../auth/presentation/stores/authStore";
 import { TaskType } from "../../data/entities/addTask";
+import DonateStore from "../../../donate/presentation/stores/donateStore";
 
 export interface AddTaskProps {
     addTaskStore?: AddTaskStore;
     authStore?: AuthStore;
+    donateStore?: DonateStore;
 }
 
-@inject('addTaskStore', 'authStore')
+@inject('addTaskStore', 'authStore', 'donateStore')
 @observer
 export default class AddTask extends Component<AddTaskProps> {
     render() {
@@ -52,7 +54,7 @@ export default class AddTask extends Component<AddTaskProps> {
                             value={this.props.addTaskStore?.calculatedPrice}
                             disabled={true}
                         />
-                        <InlineError message={this.props.addTaskStore!.addTaskError} fieldID=""/>
+                        <InlineError message={this.props.addTaskStore!.addTaskError} fieldID="" />
                         <div className="d-flex">
                             <div className="mr-1">
                                 <Button
@@ -63,7 +65,10 @@ export default class AddTask extends Component<AddTaskProps> {
                                     Добавить
                                 </Button>
                             </div>
-                            <Button plain>Пополнить счет</Button>
+                            <Button plain onClick={() => {
+                                this.props.addTaskStore?.setIsModalOpen(false);
+                                this.props.donateStore?.setModalOpen(true);
+                            }}>Пополнить счет</Button>
                         </div>
                     </FormLayout>
                 );
