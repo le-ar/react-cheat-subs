@@ -70,7 +70,7 @@ export default class TaskPage extends Component<TaskPageProps> {
                 <div>
                     <UserWidget />
                 </div>
-                <div className="d-flex">
+                <div className="d-flex flex-wrap tasks">
                     <TaskCard
                         title="Лайки"
                         isLoading={!this.taskStore!.isTasksLikesLoaded}
