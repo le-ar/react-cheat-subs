@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { AuthRemoteDatasource } from "../../data/datasources/authRemoteDatasource";
 import { Failure, FailureUnauthorized } from '../../../../core/failures';
 import User from '../../../user/data/entities/user';
@@ -17,8 +17,15 @@ export class AuthStore {
     @observable myAccountError: string = '';
     @observable myAccountHasError: boolean = true;
 
-    async getMyAccount() {
+    @action async getMyAccount() {
         this.isMyAccountLoading = true;
+        
+        await this.updateMyAccount();
+
+        this.isMyAccountLoading = false;
+    }
+
+    @action async updateMyAccount() {
         let result = await this.authRemoteDatasource.getMyAccount();
         if (result instanceof User) {
             this.myAccount = result;
@@ -31,6 +38,5 @@ export class AuthStore {
                 this.myAccountError = 'Обновите страницу';
             }
         }
-        this.isMyAccountLoading = false;
     }
 }

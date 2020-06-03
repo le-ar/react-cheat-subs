@@ -77,7 +77,7 @@ body {
 
 @media (max-width: 820px) {
   .tasks {
-    width: 260px;
+    width: 220px;
   }
 
   .card-task {
