@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import { AuthRemoteDatasource } from "../../data/datasources/authRemoteDatasource";
-import { Account } from '../../data/entities/account';
 import { Failure, FailureUnauthorized } from '../../../../core/failures';
+import User from '../../../user/data/entities/user';
 
 export class AuthStore {
     private authRemoteDatasource: AuthRemoteDatasource;
@@ -13,14 +13,14 @@ export class AuthStore {
     }
 
     @observable isMyAccountLoading: boolean = false;
-    @observable myAccount: Account | null = null;
+    @observable myAccount: User | null = null;
     @observable myAccountError: string = '';
     @observable myAccountHasError: boolean = true;
 
     async getMyAccount() {
         this.isMyAccountLoading = true;
         let result = await this.authRemoteDatasource.getMyAccount();
-        if (result instanceof Account) {
+        if (result instanceof User) {
             this.myAccount = result;
         } else if (result instanceof Failure) {
             if (result instanceof FailureUnauthorized) {

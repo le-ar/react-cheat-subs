@@ -1,4 +1,4 @@
-export type TaskResourceType = 'photo' | 'note';
+export type TaskResourceType = 'photo' | 'note' | 'user' | 'group';
 
 export default class Task {
     id: number;

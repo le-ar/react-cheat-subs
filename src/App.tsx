@@ -3,8 +3,8 @@ import logo from './logo.svg';
 import { inject, observer } from 'mobx-react';
 import { AuthStore } from './features/auth/presentation/stores/authStore';
 import { Frame, Loading, Button, Layout, Card } from '@shopify/polaris';
-import { Account } from './features/auth/data/entities/account';
 import TaskPage from './features/tasks/presentation/pages/taskPage';
+import User from './features/user/data/entities/user';
 
 const Auth = lazy(() => import('./features/auth/presentation/pages/authPage'));
 
@@ -40,7 +40,7 @@ export class App extends Component<AppProps> {
         content = <Auth />;
       }
 
-      if (this.props.authStore?.myAccount instanceof Account) {
+      if (this.props.authStore?.myAccount instanceof User) {
         content = <TaskPage />;
       }
     }
