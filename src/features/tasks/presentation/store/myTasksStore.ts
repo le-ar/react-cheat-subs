@@ -19,11 +19,15 @@ export default class MyTasksStore {
     }
     @action setModalOpen(open: boolean) {
         if (open) {
+            this.myTasks = [];
+            this.isMyTasksAllLoaded = false;
             this.loadMyTasks();
         }
         this._isModalOpen = open;
     }
 
+    @observable myTasksNextLoading: boolean = false;
+    @observable isMyTasksAllLoaded: boolean = false;
     @observable myTasks: MyTask[] = [];
     @observable myTasksLoading: boolean = false;
     @observable private _myTasksError: string = '';
@@ -31,16 +35,35 @@ export default class MyTasksStore {
         return this._myTasksError;
     }
     @action async loadMyTasks() {
-        this.myTasksLoading = true;
+        if (this._myTasksError.length > 0 || this.isMyTasksAllLoaded) {
+            return;
+        }
+        if (this.myTasks.length === 0) {
+            this.myTasksLoading = true;
+        }
+        this.myTasksNextLoading = true;
 
-        let result = await this.taskRemoteDatasource.getMyTasks();
+        let taskOffset = 0;
+        if (this.myTasks.length > 0) {
+            taskOffset = this.myTasks[this.myTasks.length - 1].id
+        }
+
+        let result = await this.taskRemoteDatasource.getMyTasks(taskOffset);
         if (result instanceof Failure) {
             this._myTasksError = 'Попробуйте позже';
         } else {
             this._myTasksError = '';
-            this.myTasks = result;
+            if (this.myTasks.length === 0) {
+                this.myTasks = result;
+            } else {
+                if (result.length === 0) {
+                    this.isMyTasksAllLoaded = true;
+                }
+                this.myTasks = this.myTasks.concat(result);
+            }
         }
 
         this.myTasksLoading = false;
+        this.myTasksNextLoading = false;
     }
 }

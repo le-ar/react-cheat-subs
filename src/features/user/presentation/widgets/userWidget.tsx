@@ -33,7 +33,7 @@ export default class UserWidget extends Component<UserWidgetProps> {
                     <Button plain onClick={() => {
                         this.props.myTasksStore?.setModalOpen(true);
                     }}>
-                        Мои заказы
+                        Мои задания
                     </Button>
                 </div>
             );
@@ -47,9 +47,10 @@ export default class UserWidget extends Component<UserWidgetProps> {
                     </div>
                     <div>
                         <div>
-                            <Button plain>
+                            {this.props.authStore.myAccount.name}
+                            {/* <Button plain>
                                 {this.props.authStore.myAccount.name}
-                            </Button>
+                            </Button> */}
                         </div>
                         <div className="d-flex fs-12">
                             <span className="mr-1">Поинтов: {this.props.authStore.myAccount.point}</span>
@@ -58,6 +59,7 @@ export default class UserWidget extends Component<UserWidgetProps> {
                     </div>
                 </div>
                 {orders}
+                <Button plain>Выйти</Button>
             </div>
         );
     }

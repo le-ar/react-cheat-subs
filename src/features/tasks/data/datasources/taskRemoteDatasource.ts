@@ -6,14 +6,15 @@ import AddTask from "../entities/addTask";
 import MyTask from "../entities/myTask";
 
 export default interface TaskRemoteDatasource {
-    getLikesTask(): Promise<Failure | Task[]>;
+    getLikesTask(loadedTasks: number[], bannedTasks: number[]): Promise<Failure | Task[]>;
     addTask(task: AddTask): Promise<Failure | null>;
     getPrices(): Promise<Failure | Prices>;
-    getMyTasks(): Promise<Failure | MyTask[]>;
+    getMyTasks(offset: number): Promise<Failure | MyTask[]>;
+    completeTask(taskId: number, key: string): Promise<Failure | null>;
 }
 
 export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
-    async getLikesTask(): Promise<Failure | Task[]> {
+    async getLikesTask(loadedTasks: number[], bannedTasks: number[]): Promise<Failure | Task[]> {
         await sleep(1000);
 
         // return new Failure();
@@ -23,31 +24,31 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
             new Task({
                 id: 0,
                 price: 5,
-                url: '',
+                url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
                 id: 1,
                 price: 5,
-                url: '',
+                url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
                 id: 2,
                 price: 5,
-                url: '',
+                url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
                 id: 3,
                 price: 5,
-                url: '',
+                url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
                 id: 4,
                 price: 5,
-                url: '',
+                url: 'https://vk.com',
                 resourceType: 'note',
             }),
         ];
@@ -70,11 +71,21 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
         return null;
     }
 
-    async getMyTasks(): Promise<Failure | MyTask[]> {
+    taskId = 0;
+    
+    async getMyTasks(offset: number): Promise<Failure | MyTask[]> {
         // return new Failure();
+        if (offset === 0) {
+            this.taskId = 0;
+        }
+        await sleep(1000);
+        if (this.taskId > 12) {
+            return [];
+        }
+
         return [
             new MyTask({
-                id: 0,
+                id: this.taskId++,
                 resourceType: 'photo',
                 price: 100,
                 url: 'https://google.com',
@@ -87,7 +98,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 taskType: 'like',
             }),
             new MyTask({
-                id: 2,
+                id: this.taskId++,
                 resourceType: 'note',
                 price: 100,
                 url: 'https://google.com',
@@ -100,7 +111,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 taskType: 'like',
             }),
             new MyTask({
-                id: 3,
+                id: this.taskId++,
                 resourceType: 'group',
                 price: 100,
                 url: 'https://google.com',
@@ -113,7 +124,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 taskType: 'subscribeGroup',
             }),
             new MyTask({
-                id: 4,
+                id: this.taskId++,
                 resourceType: 'user',
                 price: 100,
                 url: 'https://google.com',
@@ -126,5 +137,10 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 taskType: 'subscribeUser',
             }),
         ];
+    }
+
+    async completeTask(taskId: number, key: string): Promise<Failure | null> {
+        await sleep(500);
+        return new Failure();
     }
 }

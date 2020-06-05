@@ -1,7 +1,9 @@
 import TaskRemoteDatasource from "../../data/datasources/taskRemoteDatasource";
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import Task from "../../data/entities/task";
 import { Failure, FailureTasksCompleted } from "../../../../core/failures";
+import sha256 from 'crypto-js/sha256';
+import Base64 from 'crypto-js/enc-base64';
 
 export default class TaskStore {
     private taskRemoteDatasource: TaskRemoteDatasource;
@@ -26,7 +28,8 @@ export default class TaskStore {
     @action async loadTasksLikes() {
         this.isTasksLikesLoading = true;
 
-        let result = await this.taskRemoteDatasource.getLikesTask();
+        let tasksIds = this.tasksLikes.map(task => task.id);
+        let result = await this.taskRemoteDatasource.getLikesTask(tasksIds, this.bannedLikesTasks);
         if (Array.isArray(result)) {
             this.tasksLikes = result;
             this.tasksLikesHasError = false;
@@ -42,5 +45,41 @@ export default class TaskStore {
 
         this.isTasksLikesLoading = false;
         this.isTasksLikesLoaded = true;
+    }
+
+    @action removeTaskLikeById(taskId: number) {
+        this.tasksLikes = this.tasksLikes.filter(task => task.id !== taskId);
+    }
+
+    bannedLikesTasks: number[] = [];
+    banLikeTask(taskId: number) {
+        this.bannedLikesTasks.push(taskId);
+    }
+
+    @observable checkingTasks: number[] = [];
+
+    @action async completeTask(taskId: number, userId: number) {
+        if (!this.isTaskChecking(taskId)) {
+            this.checkingTasks.push(taskId);
+        }
+
+        let key = this.encodeCompleteTask(taskId, userId);
+        await this.taskRemoteDatasource.completeTask(taskId, key);
+        
+        this.checkingTasks = this.checkingTasks.filter(id => id !== taskId);
+    }
+
+    isTaskChecking(taskId: number): boolean {
+        return this.checkingTasks.indexOf(taskId) !== -1;
+    }
+
+    private encodeCompleteTask(taskId: number, userId: number): string {
+        let key = Base64.stringify(
+            sha256(taskId.toString() + '-' + userId.toString())
+        );
+        let double = Base64.stringify(
+            sha256(key)
+        );
+        return double.substr(0, 3) + key.substr(key.length - 10, 3) + double.substr(double.length - 12, 2);
     }
 }

@@ -13,6 +13,8 @@ import DonateStore from "../../../donate/presentation/stores/donateStore";
 import DonateWidget from "../../../donate/presentation/widgets/donateWidget";
 import MyTasksStore from "../store/myTasksStore";
 import MyTasks from "../widgets/myTasks";
+import { TaskRemoteDatasourceImpl } from '../../data/datasources/taskRemoteDatasource';
+import { DonateRemoteDatasourceImpl } from '../../../donate/data/datasources/donateRemoteDatasource';
 
 interface TaskPageProps {
     authStore?: AuthStore;
@@ -38,25 +40,20 @@ export default class TaskPage extends Component<TaskPageProps> {
     }
 
     async mounted() {
-        let taskClass = (await import('../store/taskStore')).default;
-        let donateClass = (await import('../../../donate/presentation/stores/donateStore')).default;
-        let addTaskClass = (await import('../store/addTaskStore')).default;
-        let myTasksClass = (await import('../store/myTasksStore')).default;
+        let taskRemoteDatasource = new TaskRemoteDatasourceImpl();
+        let donateRemoteDatasource = new DonateRemoteDatasourceImpl();
 
-        let taskRemoteDatasource = new (await import('../../data/datasources/taskRemoteDatasource')).TaskRemoteDatasourceImpl();
-        let donateRemoteDatasource = new (await import('../../../donate/data/datasources/donateRemoteDatasource')).DonateRemoteDatasourceImpl();
-
-        this.addTaskStore = new addTaskClass({
+        this.addTaskStore = new AddTaskStore({
             taskRemoteDatasource,
             authStore: this.props.authStore!
         });
-        this.taskStore = new taskClass({
+        this.taskStore = new TaskStore({
             taskRemoteDatasource,
         });
-        this.donateStore = new donateClass({
+        this.donateStore = new DonateStore({
             donateRemoteDatasource
         });
-        this.myTasksStore = new myTasksClass({
+        this.myTasksStore = new MyTasksStore({
             taskRemoteDatasource
         });
 
@@ -112,41 +109,24 @@ export default class TaskPage extends Component<TaskPageProps> {
                     </div>
                     <DonateWidget />
                 </Provider>
-                <div className="d-flex flex-wrap tasks">
-                    <TaskCard
-                        title="Лайки"
-                        isLoading={!this.taskStore!.isTasksLikesLoaded}
-                        tasks={this.taskStore!.tasksLikes}
-                        onRefresh={() => this.handleLikesRefresh()}
-                        doText="Лайкни"
-                        info={info}
-                        onRemove={(id) => {
-                            this.taskStore!.tasksLikes = this.taskStore!.tasksLikes.filter(t => t.id !== id);
-                        }}
-                    />
-                    <TaskCard
-                        title="Лайки"
-                        isLoading={!this.taskStore!.isTasksLikesLoaded}
-                        tasks={this.taskStore!.tasksLikes}
-                        onRefresh={() => this.handleLikesRefresh()}
-                        doText="Лайкни"
-                        info={info}
-                        onRemove={(id) => {
-                            this.taskStore!.tasksLikes = this.taskStore!.tasksLikes.filter(t => t.id !== id);
-                        }}
-                    />
-                    <TaskCard
-                        title="Лайки"
-                        isLoading={!this.taskStore!.isTasksLikesLoaded}
-                        tasks={this.taskStore!.tasksLikes}
-                        onRefresh={() => this.handleLikesRefresh()}
-                        doText="Лайкни"
-                        info={info}
-                        onRemove={(id) => {
-                            this.taskStore!.tasksLikes = this.taskStore!.tasksLikes.filter(t => t.id !== id);
-                        }}
-                    />
-                </div>
+                <Provider taskStore={this.taskStore}>
+                    <div className="d-flex flex-wrap tasks">
+                        <TaskCard
+                            title="Лайки"
+                            isLoading={!this.taskStore!.isTasksLikesLoaded}
+                            tasks={this.taskStore!.tasksLikes}
+                            onRefresh={() => this.handleLikesRefresh()}
+                            doText="Лайкни"
+                            info={info}
+                            onRemove={(id) => {
+                                this.taskStore?.removeTaskLikeById(id);
+                            }}
+                            onComplete={(taskId) => {
+                                this.taskStore?.completeTask(taskId, this.props.authStore!.myAccount!.id);
+                            }}
+                        />
+                    </div>
+                </Provider>
             </div>
         );
     }
