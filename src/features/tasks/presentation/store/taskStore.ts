@@ -31,7 +31,7 @@ export default class TaskStore {
         let tasksIds = this.tasksLikes.map(task => task.id);
         let result = await this.taskRemoteDatasource.getLikesTask(tasksIds, this.bannedLikesTasks);
         if (Array.isArray(result)) {
-            this.tasksLikes = result;
+            this.tasksLikes = result.filter(task => !this.isLikeTaskBanned(task.id));
             this.tasksLikesHasError = false;
         } else {
             if (result instanceof FailureTasksCompleted) {
@@ -49,12 +49,16 @@ export default class TaskStore {
 
     @action removeTaskLikeById(taskId: number) {
         this.tasksLikes = this.tasksLikes.filter(task => task.id !== taskId);
+        this.banLikeTask(taskId);
         this.loadTasksLikes();
     }
 
-    bannedLikesTasks: number[] = [];
-    banLikeTask(taskId: number) {
+    @observable bannedLikesTasks: number[] = [];
+    @action banLikeTask(taskId: number) {
         this.bannedLikesTasks.push(taskId);
+    }
+    isLikeTaskBanned(taskId: number): boolean {
+        return this.bannedLikesTasks.indexOf(taskId) !== -1;
     }
 
     @observable checkingTasks: number[] = [];

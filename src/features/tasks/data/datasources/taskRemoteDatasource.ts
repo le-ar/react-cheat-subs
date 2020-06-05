@@ -27,31 +27,31 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
 
         return [
             new Task({
-                id: this.taskAllId++,
+                id: 1,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
-                id: this.taskAllId++,
+                id: 2,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
-                id: this.taskAllId++,
+                id: 3,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
-                id: this.taskAllId++,
+                id: 4,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
-                id: this.taskAllId++,
+                id: 5,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
