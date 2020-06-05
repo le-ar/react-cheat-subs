@@ -66,4 +66,8 @@ export default class MyTasksStore {
         this.myTasksLoading = false;
         this.myTasksNextLoading = false;
     }
+
+    @action async cancelTask(taskId: number) {
+        await this.taskRemoteDatasource.cancelMyTask(taskId);
+    }
 }

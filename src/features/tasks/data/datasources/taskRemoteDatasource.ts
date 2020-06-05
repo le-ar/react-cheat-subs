@@ -154,7 +154,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
         return new Failure();
     }
 
-    async cancelMyTask(taskId: number): Promise<Failure | null> {
-        return null;
+    async cancelMyTask(taskId: number): Promise<Failure | MyTask> {
+        return new Failure();
     }
 }
