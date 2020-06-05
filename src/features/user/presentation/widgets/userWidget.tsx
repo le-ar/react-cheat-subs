@@ -29,7 +29,7 @@ export default class UserWidget extends Component<UserWidgetProps> {
 
         if (this.props.authStore.myAccount.orderCount > 0) {
             orders = (
-                <div>
+                <div className="mb-xs-1">
                     <Button plain onClick={() => {
                         this.props.myTasksStore?.setModalOpen(true);
                     }}>

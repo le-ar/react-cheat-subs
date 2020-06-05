@@ -3,6 +3,22 @@ body {
   padding: 2rem !important;
 }
 
+.my-task__main {
+  flex: 1 1 auto;
+  width: 50px;
+}
+
+.my-task__url {
+  width: 100%;
+}
+
+.my-task__url a {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .fs-12 {
   font-size: 12px;
 }
@@ -116,6 +132,12 @@ body {
 
 .mr-1 {
   margin-right: 0.5rem;
+}
+
+@media screen and (max-width: 500px) {
+  .mb-xs-1 {
+    margin-bottom: 0.5rem;
+  }
 }
 
 .mw-100 {

@@ -11,6 +11,7 @@ export default interface TaskRemoteDatasource {
     getPrices(): Promise<Failure | Prices>;
     getMyTasks(offset: number): Promise<Failure | MyTask[]>;
     completeTask(taskId: number, key: string): Promise<Failure | null>;
+    cancelMyTask(taskId: number): Promise<Failure | null>;
 }
 
 export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
@@ -99,8 +100,9 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 userUrl: 'https://google.com',
                 done: 4,
                 orderCount: 10,
-                name: 'photo12312938',
+                name: 'photo123129381111111111111111111111',
                 taskType: 'like',
+                status: 'Started',
             }),
             new MyTask({
                 id: this.taskId++,
@@ -114,6 +116,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 orderCount: 10,
                 name: 'wall12312938',
                 taskType: 'like',
+                status: 'Done',
             }),
             new MyTask({
                 id: this.taskId++,
@@ -127,6 +130,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 orderCount: 10,
                 name: 'group12312938',
                 taskType: 'subscribeGroup',
+                status: 'Canceled',
             }),
             new MyTask({
                 id: this.taskId++,
@@ -140,6 +144,7 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
                 orderCount: 10,
                 name: 'id12312938',
                 taskType: 'subscribeUser',
+                status: 'Banned',
             }),
         ];
     }
@@ -147,5 +152,9 @@ export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
     async completeTask(taskId: number, key: string): Promise<Failure | null> {
         await sleep(500);
         return new Failure();
+    }
+
+    async cancelMyTask(taskId: number): Promise<Failure | null> {
+        return null;
     }
 }

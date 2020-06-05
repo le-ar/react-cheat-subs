@@ -1,6 +1,8 @@
 import Task, { TaskResourceType } from "./task";
 import { TaskType } from "./addTask";
 
+export type MyTaskStatus = 'Started' | 'Canceled' | 'Done' | 'Banned';
+
 export default class MyTask extends Task {
     userId: number;
     userName: string;
@@ -8,7 +10,8 @@ export default class MyTask extends Task {
     done: number;
     orderCount: number;
     name: string;
-    taskType: TaskType; 
+    taskType: TaskType;
+    status: MyTaskStatus;
 
     constructor(props: {
         id: number;
@@ -22,6 +25,7 @@ export default class MyTask extends Task {
         orderCount: number;
         name: string;
         taskType: TaskType; 
+        status: MyTaskStatus;
     }) {
         super({
             id: props.id,
@@ -37,5 +41,6 @@ export default class MyTask extends Task {
         this.orderCount = props.orderCount;
         this.name = props.name;
         this.taskType = props.taskType;
+        this.status = props.status;
     }
 }

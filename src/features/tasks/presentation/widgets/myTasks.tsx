@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from "react";
-import { Modal, Loading, Icon, Button, Link, Spinner } from "@shopify/polaris";
+import { Modal, Loading, Icon, Button, Link, Spinner, TextStyle } from "@shopify/polaris";
 import MyTasksStore from "../store/myTasksStore";
 import { inject, observer } from "mobx-react";
 import { CameraMajorMonotone, NoteMajorMonotone } from "@shopify/polaris-icons";
@@ -28,23 +28,52 @@ export default class MyTasks extends Component<MyTasksProps> {
                 name = 'Подписались'
             }
 
+            let taskStatus = (
+                <TextStyle>В работе</TextStyle>
+            );
+            if (task.status === 'Done') {
+                taskStatus = (
+                    <TextStyle variation="positive">Выполнен</TextStyle>
+                );
+            } else if (task.status === 'Canceled') {
+                taskStatus = (
+                    <TextStyle variation="strong">Отменен</TextStyle>
+                );
+            } else if (task.status === 'Banned') {
+                taskStatus = (
+                    <TextStyle variation="negative">Заблокирован</TextStyle>
+                );
+            }
+
+            let actions: JSX.Element | undefined = undefined;
+            if (task.status === 'Started') {
+                actions = (
+                    <div className="d-flex">
+                        {/* <div className="mr-1">
+                            <Button plain>Пополнить</Button>
+                        </div> */}
+                        <Button plain>Отменить</Button>
+                    </div>
+                );
+            }
+
             return (
                 <Modal.Section key={task.id}>
                     <div className="d-flex">
                         <div className="mr-2">
                             <Icon source={icon} />
                         </div>
-                        <div>
-                            <div>
-                                <Link url="https://google.com" external>{task.name}</Link>
+                        <div className="my-task__main mr-1">
+                            <div className="my-task__url">
+                                <Link url="https://google.com" external>
+                                    <span>{task.name}</span>
+                                </Link>
                             </div>
                             <div>{name} {task.done}/{task.orderCount}</div>
-                            <div className="d-flex">
-                                {/* <div className="mr-1">
-                                    <Button plain>Пополнить</Button>
-                                </div> */}
-                                <Button plain>Отменить</Button>
-                            </div>
+                            {actions}
+                        </div>
+                        <div>
+                            {taskStatus}
                         </div>
                     </div>
                 </Modal.Section>
