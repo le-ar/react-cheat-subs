@@ -49,6 +49,7 @@ export default class TaskStore {
 
     @action removeTaskLikeById(taskId: number) {
         this.tasksLikes = this.tasksLikes.filter(task => task.id !== taskId);
+        this.loadTasksLikes();
     }
 
     bannedLikesTasks: number[] = [];

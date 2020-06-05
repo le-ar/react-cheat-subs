@@ -14,39 +14,44 @@ export default interface TaskRemoteDatasource {
 }
 
 export class TaskRemoteDatasourceImpl implements TaskRemoteDatasource {
+    taskAllId = 0;
     async getLikesTask(loadedTasks: number[], bannedTasks: number[]): Promise<Failure | Task[]> {
         await sleep(1000);
 
         // return new Failure();
         // return new FailureTasksCompleted();
         // return [];
+        // if (this.taskAllId > 10) {
+        //     return [];
+        // }
+
         return [
             new Task({
-                id: 0,
+                id: this.taskAllId++,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
-                id: 1,
+                id: this.taskAllId++,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
-                id: 2,
+                id: this.taskAllId++,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'photo',
             }),
             new Task({
-                id: 3,
+                id: this.taskAllId++,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
             }),
             new Task({
-                id: 4,
+                id: this.taskAllId++,
                 price: 5,
                 url: 'https://vk.com',
                 resourceType: 'note',
